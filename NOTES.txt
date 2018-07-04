@@ -12,7 +12,21 @@ python3 declare_sources.py
 
 python3 load_wikipedia_article.py "<article name>"
       (e.g., python3 load_wikipedia_article.py "E-textiles") 
-	
+
+mkdir output
+
+python3 to_openIE.py
+
+export MY_WORKING_DIR=`pwd`
+
+cd <open IE 5.0 directory>
+
+java -Xmx10g -XX:+UseConcMarkSweepGC -jar target/scala-2.10/openie-assembly-5.0-SNAPSHOT.jar --format column --include-unknown-arg2 $MY_WORKING_DIR/output/send_to_open_IE.txt $MY_WORKING_DIR/output/from_open_IE.txt
+
+cd $MY_WORKING_DIR
+
+
+
 
 
 EXAMPLES:

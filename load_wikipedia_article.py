@@ -138,7 +138,7 @@ for section_i, section in enumerate(section_list):
             print('Houston, we have a problem! Exiting.')
             sys.exit(0)
 
-        sentence_id_to_text[new_sentence_id] = {'header_id' : title_to_header_id[title.lower()], 'text' : [x.lower() for x in word_tokenize(sentence)]}
+        sentence_id_to_text[new_sentence_id] = {'header_id' : title_to_header_id[title.lower()], 'text' : [x.lower() for x in word_tokenize(sentence)], 'sentence_lower' : sentence.lower()}
 
         if old_sentence_id != None:
             cmd = 'MATCH (os:SENTENCE), (ns:SENTENCE) WHERE ID(ns) = $new_sentence_id AND ID(os) = $old_sentence_id MERGE (os)-[r:HAS_NEXT_SENTENCE]->(ns) RETURN os, r, ns;'
@@ -155,11 +155,19 @@ for sentence_id in sentence_id_to_text.keys():
     header_id = sentence_id_to_text[sentence_id]['header_id']
     word_list = sentence_id_to_text[sentence_id]['text']
 
+    sentence_lower = sentence_id_to_text[sentence_id]['sentence_lower']
+    location = 0
+    char_position_list = []
+    for token in word_list:
+        char_position = sentence_lower[location:].find(token)
+        location = location + char_position
+        char_position_list.append(location)
+
     old_word_id = None
-    for i, word in enumerate(word_list):
-        cmd = 'MATCH (s:SENTENCE) WHERE ID(s) = $sentence_id CREATE (w:WORD_LOCAL {text : $word, position_in_sentence : $position_in_sentence})-[r:HAS_SENTENCE]->(s) RETURN w, r, s'
+    for i, word, char_pos in zip(range(0, len(word_list)), word_list, char_position_list):
+        cmd = 'MATCH (s:SENTENCE) WHERE ID(s) = $sentence_id CREATE (w:WORD_LOCAL {text : $word, position_in_sentence : $position_in_sentence, character_position_in_sentence : $char_pos})-[r:HAS_SENTENCE]->(s) RETURN w, r, s'
         with driver.session() as session:
-            results = session.run(cmd, position_in_sentence = i, sentence_id = sentence_id, word = word)
+            results = session.run(cmd, position_in_sentence = i, sentence_id = sentence_id, word = word, char_pos = char_pos)
 
         count = 0
         for record in results:

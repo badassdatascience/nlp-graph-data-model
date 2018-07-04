@@ -44,3 +44,5 @@ MATCH p=((s:SOURCE)-[rs]-(a:ARTICLE)-[ra]-(h1:HEADING)-[rst]-(sta:SENTENCE)-[rw:
 # Note repeats in the following:
 
 MATCH (wg:WORD_GLOBAL)<-[rwlwg:HAS_WORD_GLOBAL]-(wl:WORD_LOCAL)-[rs:HAS_SENTENCE]->(s:SENTENCE)-[rh:HAS_HEADING]->(h:HEADING)-[ra:HAS_ARTICLE]->(a:ARTICLE) WHERE wg.text = "textil" RETURN wg.text AS global_word, wl.text AS local_word, a.name AS article, h.title AS heading, s.text AS sentence ORDER BY h.position_in_article, s.position_in_heading
+
+MATCH (q)-[rq]-(n:OPENIE_RELATION)-[r:SENTENCE_HAS_OPENIE_RELATION]-(s:SENTENCE) WHERE ID(s) = 93282 RETURN n, r, s, q, rq;

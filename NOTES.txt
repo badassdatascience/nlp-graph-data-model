@@ -1,0 +1,29 @@
+
+
+emacs credentials.py
+      (make sure you have everything you want)
+
+emacs data/sources.csv
+      (make sure you have everything you want)
+
+python3 flush_database.py
+
+python3 declare_sources.py
+
+python3 load_wikipedia_article.py "<article name>"
+      (e.g., python3 load_wikipedia_article.py "E-textiles") 
+	
+
+
+EXAMPLES:
+
+MATCH p=((s:SOURCE)-[rs]-(a:ARTICLE)-[ra]-(h1:HEADING)-[r:HAS_NEXT_HEADING*1..12]->(h2:HEADING)) WHERE h1.title = "summary" RETURN p
+
+MATCH p=((s:SOURCE)-[rs]-(a:ARTICLE)-[ra]-(h1:HEADING)-[rst]-(sta:SENTENCE)-[rstab:HAS_NEXT_SENTENCE*1..12]-(rstb:SENTENCE)) WHERE h1.title IN ["summary", "history"] AND sta.position_in_heading = 0 RETURN p
+
+MATCH p=((s:SOURCE)-[rs]-(a:ARTICLE)-[ra]-(h1:HEADING)-[rst]-(sta:SENTENCE)-[rw:HAS_SENTENCE]-(w1:WORD_LOCAL)-[rww:HAS_NEXT_WORD*1..12]-(w2:WORD_LOCAL)) WHERE w1.position_in_sentence = 0 AND h1.title IN ["summary", "history"] AND sta.position_in_heading = 0 RETURN p
+
+MATCH p=((s:SOURCE)-[rs]-(a:ARTICLE)-[ra]-(h1:HEADING)-[rst]-(sta:SENTENCE)-[rw:HAS_SENTENCE]-(w1:WORD_LOCAL)) WHERE h1.title IN ["summary", "history"] AND sta.position_in_heading = 0 RETURN p
+
+MATCH p=((s:SOURCE)-[rs]-(a:ARTICLE)-[ra]-(h1:HEADING)-[rst]-(sta:SENTENCE)-[rw:HAS_SENTENCE]-(w1:WORD_LOCAL)-[rww:HAS_NEXT_WORD*1..12]-(w2:WORD_LOCAL)), (w1)-[rw1:HAS_WORD_GLOBAL]-(wg1:WORD_GLOBAL), (w2)-[rw2:HAS_WORD_GLOBAL]-(wg2) WHERE w1.position_in_sentence = 0 AND h1.title IN ["summary", "history"] AND sta.position_in_heading = 0 RETURN p, w1, rw1, wg1, w2, rw2, wg2;
+

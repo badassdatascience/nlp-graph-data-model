@@ -1,0 +1,18 @@
+Electronic textiles, also known as smart garments, smart clothing, smart textiles, or smart fabrics, are fabrics that enable digital components such as a battery and a light (including small computers), and electronics to be embedded in them.
+
+Smart textiles are fabrics that have been developed with new technologies that provide added value to the wearer.
+
+Smart textiles can be broken into two different categories: aesthetic and performance enhancing.
+
+Performance enhancing smart textiles are intended for use in athletic, extreme sports and military applications.
+
+The health and beauty industry is also taking advantage of these innovations, which range from drug-releasing medical textiles, to fabric with moisturizer, perfume, and anti-aging properties.
+
+Electronic textiles are distinct from wearable computing because emphasis is placed on the seamless integration of textiles with electronic elements like microcontrollers, sensors, and actuators.
+
+Technical textiles, fashion and entertainment will also be significant applications.
+
+Printed sensors for both physiological and environmental monitoring have been integrated into textiles including cotton, Gore-Tex, and neoprene.
+
+Center for Microsystem Technologies, Ghent University / IMEC, Belgium, Advanced Textiles Research Group, Nottingham Trent University, UK, Virginia Tech E-Textiles Lab, XS Labs, Concordia University, Textile Futures Program, Central St. Martins College of Art and Design, 3lectromode Studio, Concordia University, Wakita Lab, Keio University, High-Low Tech Group, MIT Media Lab, whispers research group, Simon Frasier University, Wearable Computing Lab, ETH Zurich, Studio subTela, Concordia University, Laboratory for Engineered Human Protection at Philadelphia University, Institut für Textiltechnik, RWTH Aachen, Luminous Textile Panels, Philips, Eindhoven, Design Research Lab Berlin, Fraunhofer IZM TexLab, Berlin, Social Body Lab, OCAD University, Toronto, ON, Canada
+

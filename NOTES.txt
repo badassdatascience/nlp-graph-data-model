@@ -27,3 +27,6 @@ MATCH p=((s:SOURCE)-[rs]-(a:ARTICLE)-[ra]-(h1:HEADING)-[rst]-(sta:SENTENCE)-[rw:
 
 MATCH p=((s:SOURCE)-[rs]-(a:ARTICLE)-[ra]-(h1:HEADING)-[rst]-(sta:SENTENCE)-[rw:HAS_SENTENCE]-(w1:WORD_LOCAL)-[rww:HAS_NEXT_WORD*1..12]-(w2:WORD_LOCAL)), (w1)-[rw1:HAS_WORD_GLOBAL]-(wg1:WORD_GLOBAL), (w2)-[rw2:HAS_WORD_GLOBAL]-(wg2) WHERE w1.position_in_sentence = 0 AND h1.title IN ["summary", "history"] AND sta.position_in_heading = 0 RETURN p, w1, rw1, wg1, w2, rw2, wg2;
 
+# Note repeats in the following:
+
+MATCH (wg:WORD_GLOBAL)<-[rwlwg:HAS_WORD_GLOBAL]-(wl:WORD_LOCAL)-[rs:HAS_SENTENCE]->(s:SENTENCE)-[rh:HAS_HEADING]->(h:HEADING)-[ra:HAS_ARTICLE]->(a:ARTICLE) WHERE wg.text = "textil" RETURN wg.text AS global_word, wl.text AS local_word, a.name AS article, h.title AS heading, s.text AS sentence ORDER BY h.position_in_article, s.position_in_heading

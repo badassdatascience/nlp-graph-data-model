@@ -7,6 +7,8 @@ from credentials import uri, username, password
 from neo4j.v1 import GraphDatabase
 import json
 import pprint as pp
+from nltk import word_tokenize
+import sys
 
 #
 # connect to Neo4j
@@ -40,6 +42,11 @@ for line in f.readlines():
     object = line[4]
     sentence = line[5]
     sentence_id = sentences_to_id[sentence]
+
+#    print()
+#    print(line)
+#    print()
+#    sys.exit(0)
 
     object_list = []
     try:
@@ -75,13 +82,13 @@ f.close()
 #
 # TEMPORARY
 #
-cmd = 'MATCH (q)-[r:HAS_OPENIE_RELATION]-(n) DELETE r;'
+cmd = 'MATCH (q)-[r:SENTENCE_HAS_OPENIE_RELATION]-(n) DELETE r;'
 with driver.session() as session:
     query_results = session.run(cmd)
-cmd = 'MATCH (q)-[r:HAS_OPENIE_OBJECT]-(n) DELETE r;'
+cmd = 'MATCH (q)-[r:SENTENCE_HAS_OPENIE_OBJECT]-(n) DELETE r;'
 with driver.session() as session:
     query_results = session.run(cmd)
-cmd = 'MATCH (q)-[r:HAS_OPENIE_SUBJECT]-(n) DELETE r;'
+cmd = 'MATCH (q)-[r:SENTENCE_HAS_OPENIE_SUBJECT]-(n) DELETE r;'
 with driver.session() as session:
     query_results = session.run(cmd)
 cmd = 'MATCH (ro:OPENIE_RELATION) DELETE ro;'
@@ -93,6 +100,7 @@ with driver.session() as session:
 cmd = 'MATCH (ro:OPENIE_SUBJECT) DELETE ro;'
 with driver.session() as session:
     query_results = session.run(cmd)
+
 
 
 #
@@ -112,17 +120,48 @@ for sentence_id in results.keys():
         relation = finding['relation']
 
         sentence = finding['sentence']
-        cmd = 'MATCH (s:SENTENCE) WHERE s.text = $sentence AND ID(s) = $sentence_id CREATE (ro:OPENIE_RELATION {text : $relation_text})<-[r:HAS_OPENIE_RELATION]-(s) RETURN s, ro, r;'
+
+#         sentence_tokens = [x.lower() for x in word_tokenize(sentence)]
+#         print()
+#         print(sentence.lower())
+#         print()
+#         print(sentence_tokens)
+#         print()
+#         location = 0
+#         position_list = []
+#         for token in sentence_tokens:
+#             position = sentence.lower()[location:].find(token)
+#             location = location + position
+#             position_list.append(location)
+#         print(position_list)
+
+
+        cmd = 'MATCH (s:SENTENCE) WHERE s.text = $sentence AND ID(s) = $sentence_id CREATE (ro:OPENIE_RELATION {text : $relation_text})<-[r:SENTENCE_HAS_OPENIE_RELATION]-(s) RETURN s, ro, r;'
         with driver.session() as session:
             query_results = session.run(cmd, sentence = sentence, sentence_id = sentence_id, relation_text = relation)
         for record in query_results:
             relation_id = record['ro'].id
 
         for type, object in finding['objects']:
-            cmd = 'MATCH (ro:OPENIE_RELATION) WHERE ID(ro) = $relation_id MERGE (ro)-[r:HAS_OPENIE_OBJECT]->(oo:OPENIE_OBJECT {type : $type, text : $text}) RETURN oo;'
+            cmd = 'MATCH (ro:OPENIE_RELATION) WHERE ID(ro) = $relation_id MERGE (ro)-[r:SENTENCE_HAS_OPENIE_OBJECT]->(oo:OPENIE_OBJECT {type : $type, text : $text}) RETURN oo;'
             with driver.session() as session:
                 query_results = session.run(cmd, relation_id = relation_id, type=type, text = object)
 
+#             local_tokens = [x.lower() for x in word_tokenize(object)]
+#             # crude
+#             n = len(local_tokens)
+#             for i in range(0, len(sentence_tokens) - n):
+#                 if sentence_tokens[i:(i+n)] == local_tokens:
+#                     print(sentence_tokens[i:(i+n)])
+#                     print(list(range(i, i+n)))
+
+
+        for type, subject in finding['subjects']:
+            cmd = 'MATCH (ro:OPENIE_RELATION) WHERE ID(ro) = $relation_id MERGE (ro)-[r:SENTENCE_HAS_OPENIE_SUBJECT]->(oo:OPENIE_SUBJECT {type : $type, text : $text}) RETURN oo;'
+            with driver.session() as session:
+                query_results = session.run(cmd, relation_id = relation_id, type=type, text = subject)
+
+       
 
 
 

@@ -43,22 +43,33 @@ for line in f.readlines():
     sentence = line[5]
     sentence_id = sentences_to_id[sentence]
 
-#    print()
-#    print(line)
-#    print()
-#    sys.exit(0)
+    print()
+    print(object)
+    print()
 
     object_list = []
     try:
-        object_list = [(x.split(',List([')[0].split('Argument(')[0].strip(), x.split(',List([')[0].split('Argument(')[1].strip()) for x in subject.split(';')]
+        object_list = [
+            (
+                x.split(',List([')[0].split('Argument(')[0].strip(),
+                x.split(',List([')[0].split('Argument(')[1].strip(),
+                int(x.split(',List([')[1].split(',')[0]),
+                int(x.split(',List([')[1].split(', ')[1].split(')')[0]),
+                )
+            for x in object.split(';')
+            ]
+
     except:
         pass
+
+    print(object_list)
+    sys.exit(0)
 
     relation = relation.replace('Relation(', '').split(',List([')[0]
 
     subject_list = []
     try:
-        subject_list = [(x.split(',List([')[0].split('Argument(')[0].strip(), x.split(',List([')[0].split('Argument(')[1].strip()) for x in object.split(';')]
+        subject_list = [(x.split(',List([')[0].split('Argument(')[0].strip(), x.split(',List([')[0].split('Argument(')[1].strip()) for x in subject.split(';')]
     except:
         pass
 
